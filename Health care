@@ -1,0 +1,159 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// Class representing a Patient
+class Patient {
+    String name;
+    int age;
+    String condition;
+    Doctor doctor;
+
+    public Patient(String name, int age, String condition) {
+        this.name = name;
+        this.age = age;
+        this.condition = condition;
+    }
+
+    public void assignDoctor(Doctor doctor) {
+        this.doctor = doctor;
+    }
+
+    public void displayInfo() {
+        System.out.println("Patient Name: " + name);
+        System.out.println("Age: " + age);
+        System.out.println("Condition: " + condition);
+        if (doctor != null) {
+            System.out.println("Assigned Doctor: " + doctor.name);
+        } else {
+            System.out.println("No doctor assigned.");
+        }
+    }
+}
+
+// Class representing a Doctor
+class Doctor {
+    String name;
+    String specialization;
+
+    public Doctor(String name, String specialization) {
+        this.name = name;
+        this.specialization = specialization;
+    }
+}
+
+public class HealthcareManagementSystem {
+    List<Patient> patients = new ArrayList<>();
+    List<Doctor> doctors = new ArrayList<>();
+
+    // Register a new patient
+    public void registerPatient(String name, int age, String condition) {
+        Patient patient = new Patient(name, age, condition);
+        patients.add(patient);
+        System.out.println("Patient " + name + " has been registered.");
+    }
+
+    // Register a new doctor
+    public void registerDoctor(String name, String specialization) {
+        Doctor doctor = new Doctor(name, specialization);
+        doctors.add(doctor);
+        System.out.println("Doctor " + name + " has been registered.");
+    }
+
+    // Assign a doctor to a patient
+    public void assignDoctorToPatient(String patientName, String doctorName) {
+        Patient patient = findPatient(patientName);
+        Doctor doctor = findDoctor(doctorName);
+
+        if (patient != null && doctor != null) {
+            patient.assignDoctor(doctor);
+            System.out.println("Doctor " + doctorName + " has been assigned to patient " + patientName);
+        } else {
+            System.out.println("Either the patient or doctor could not be found.");
+        }
+    }
+
+    // Find a patient by name
+    private Patient findPatient(String name) {
+        for (Patient p : patients) {
+            if (p.name.equals(name)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    // Find a doctor by name
+    private Doctor findDoctor(String name) {
+        for (Doctor d : doctors) {
+            if (d.name.equals(name)) {
+                return d;
+            }
+        }
+        return null;
+    }
+
+    // Display all registered patients
+    public void displayPatients() {
+        for (Patient p : patients) {
+            p.displayInfo();
+            System.out.println("----------------------");
+        }
+    }
+
+    // Main menu of the application
+    public void menu() {
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            System.out.println("1. Register Patient");
+            System.out.println("2. Register Doctor");
+            System.out.println("3. Assign Doctor to Patient");
+            System.out.println("4. Display Patients");
+            System.out.println("5. Exit");
+
+            int choice = sc.nextInt();
+            sc.nextLine(); // consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.println("Enter patient name:");
+                    String pname = sc.nextLine();
+                    System.out.println("Enter patient age:");
+                    int age = sc.nextInt();
+                    sc.nextLine(); // consume newline
+                    System.out.println("Enter patient condition:");
+                    String condition = sc.nextLine();
+                    registerPatient(pname, age, condition);
+                    break;
+                case 2:
+                    System.out.println("Enter doctor name:");
+                    String dname = sc.nextLine();
+                    System.out.println("Enter doctor specialization:");
+                    String specialization = sc.nextLine();
+                    registerDoctor(dname, specialization);
+                    break;
+                case 3:
+                    System.out.println("Enter patient name:");
+                    String patientName = sc.nextLine();
+                    System.out.println("Enter doctor name:");
+                    String doctorName = sc.nextLine();
+                    assignDoctorToPatient(patientName, doctorName);
+                    break;
+                case 4:
+                    displayPatients();
+                    break;
+                case 5:
+                    System.out.println("Exiting...");
+                    sc.close();
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        HealthcareManagementSystem system = new HealthcareManagementSystem();
+        system.menu();
+    }
+}
